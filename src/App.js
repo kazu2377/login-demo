@@ -1,23 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import LoginForm from "./LoginForm";
 
 function App() {
+  const handleLogin = (username, password) => {
+    // ここでAPIを呼び出してログイン処理を行うことも可能
+    // 簡単なデモのため、コンソールに出力するだけにしています
+    console.log("Trying to log in with", username, password);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Login</h1>
+      <LoginForm onLogin={handleLogin} />
     </div>
   );
 }
