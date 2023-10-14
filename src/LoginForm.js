@@ -1,34 +1,41 @@
 import React, { useState } from "react";
+import {
+  Container,
+  Title,
+  Input,
+  Button,
+  FooterText,
+} from "./StyledComponents";
 
-function LoginForm({ onLogin }) {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin(username, password);
+    console.log("Login with:", username, password);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
+    <Container>
+      <Title>サンプルHp</Title>
+      <Input
+        type="text"
+        value={username}
+        placeholder="ログインID"
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <Input
+        type="password"
+        value={password}
+        placeholder="パスワード"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button onClick={handleSubmit}>ログイン</Button>
+      <FooterText>
+        Copyright © sole color design Co., Ltd. All Rights Reserved.
+      </FooterText>
+    </Container>
   );
 }
 
