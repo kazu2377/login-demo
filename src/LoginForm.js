@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Dashboard from "./Dashboard";
+
 import {
   Container,
   Title,
@@ -11,12 +13,21 @@ function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Login with:", username, password);
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login with:", username, password);
+    setIsLoggedIn(true); // これを追加
   };
 
-  return (
+  return isLoggedIn ? (
+    <Dashboard />
+  ) : (
     <Container>
       <Title>サンプルHp</Title>
       <Input
