@@ -1,3 +1,20 @@
+body {
+  background-color: #f4f4f4; // 例: #f4f4f4
+  /* background-image: url('あなたの背景画像のパス'); // 必要に応じて */
+}
+/* .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+} */
+
+.btn {
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 8px;
+}
+
 .App {
   text-align: center;
 }
