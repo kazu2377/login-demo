@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Dashboard from "./Dashboard";
-
+import {
+  checkRequiredFields,
+  checkEmailFormat,
+  authenticateUser,
+} from "./ErrorCheckService";
 import {
   Container,
   Title,
@@ -12,17 +16,34 @@ import {
 function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Login with:", username, password);
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoggedIn(true); // これを追加
+
+    // 必須入力チェック
+    const requiredError = checkRequiredFields([username, password]);
+    if (requiredError) {
+      setError(requiredError);
+      return;
+    }
+
+    // 形式チェック（メールアドレス形式のみを想定）
+    const emailError = checkEmailFormat(username);
+    if (emailError) {
+      setError(emailError);
+      return;
+    }
+
+    // 認証エラーチェック（サンプル）
+    const authError = authenticateUser(username, password);
+    if (authError) {
+      setError(authError);
+      return;
+    }
+
+    setIsLoggedIn(true);
   };
 
   return isLoggedIn ? (
@@ -30,6 +51,7 @@ function LoginForm() {
   ) : (
     <Container>
       <Title>サンプルHp</Title>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <Input
         type="text"
         value={username}
