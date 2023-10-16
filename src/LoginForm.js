@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Dashboard from "./Dashboard";
+import Users from "./Users";
+
 import {
   checkRequiredFields,
   checkEmailFormat,
@@ -68,6 +70,8 @@ function LoginForm() {
       <FooterText>
         Copyright © sole color design Co., Ltd. All Rights Reserved.
       </FooterText>
+
+      <Users />
     </Container>
   );
 }
