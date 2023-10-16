@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import supabase from "./supabaseClient";
 
-const Dashboard = () => {
+const Dashboard = ({ studentId }) => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [selectedTime, setSelectedTime] = useState("12:00");
-  const userId = "12345"; // 仮のユーザーID
+  const [attendanceRecords, setAttendanceRecords] = useState([]);
+
   const attendanceCounts = {
     // 仮の出欠席データ
     attendance: 10,
@@ -16,30 +18,50 @@ const Dashboard = () => {
     absence: 0,
   };
 
+  useEffect(() => {
+    async function fetchAttendanceRecordsForStudent() {
+      const studentId = 1;
+      const { data, error } = await supabase
+        .from("students")
+        .select(
+          `
+          student_id,
+          attendance_records:attendance_records (
+              record_id,
+              date,
+              status,
+              time
+          )
+      `
+        )
+        .eq("student_id", studentId);
+
+      if (error) {
+        console.error("Error fetching attendance records:", error);
+      } else if (data && data[0] && data[0].attendance_records) {
+        setAttendanceRecords(data[0].attendance_records);
+      }
+    }
+
+    fetchAttendanceRecordsForStudent();
+  }, [studentId]);
+
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-5">出席管理ダッシュボード</h2>
-
-      {/* ユーザーID */}
-      <h4 className="mb-4">ユーザーID: {userId}</h4>
-
-      {/* 出欠席回数 */}
+      <h4 className="mb-4">学生ID: {studentId}</h4>
       <div className="mb-4">
         出席回数: {attendanceCounts.attendance}
         遅刻回数: {attendanceCounts.late}
         早退回数: {attendanceCounts.leaveEarly}
         欠席回数: {attendanceCounts.absence}
       </div>
-
-      {/* ボタン群 */}
       <div className="mb-4 d-flex justify-content-around">
         <button className="btn btn-success btn-lg">出席</button>
         <button className="btn btn-warning btn-lg">遅刻</button>
         <button className="btn btn-danger btn-lg">欠席</button>
         <button className="btn btn-info btn-lg">早退</button>
       </div>
-
-      {/* 日付選択 */}
       <div className="mb-4">
         <label htmlFor="datePicker" className="form-label">
           日付:
@@ -52,8 +74,6 @@ const Dashboard = () => {
           onChange={(e) => setSelectedDate(e.target.value)}
         />
       </div>
-
-      {/* 時間選択 */}
       <div className="mb-4">
         <label htmlFor="timePicker" className="form-label">
           時間 (遅刻・早退の際):
@@ -66,13 +86,9 @@ const Dashboard = () => {
           onChange={(e) => setSelectedTime(e.target.value)}
         />
       </div>
-
-      {/* 保存ボタン */}
       <div className="text-center">
         <button className="btn btn-primary">保存</button>
       </div>
-
-      {/* 出欠席一覧 */}
       <h4 className="mt-5 mb-3">受講生の出欠席一覧</h4>
       <table className="table">
         <thead>
@@ -84,16 +100,16 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {/* 以下は仮のデータです */}
-          <tr>
-            <td>2023-10-10</td>
-            <td>遅刻</td>
-            <td>09:10</td>
-            <td>
-              <button className="btn btn-danger">削除</button>
-            </td>
-          </tr>
-          {/* 他のデータも同様にこちらにリストします */}
+          {attendanceRecords.map((record, index) => (
+            <tr key={index}>
+              <td>{record.date}</td>
+              <td>{record.status}</td>
+              <td>{record.time || "なし"}</td>
+              <td>
+                <button className="btn btn-danger">削除</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

@@ -21,6 +21,8 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [studentId, setStudentId] = useState(null); // studentIdのステートを追加
+
   const handleSubmit = async (e) => {
     // async を追加
     e.preventDefault();
