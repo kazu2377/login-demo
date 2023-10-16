@@ -42,17 +42,19 @@ function LoginForm() {
     }
 
     // 認証エラーチェック（サンプル）
-    const isAuthenticated = await authenticateUser(username, password); // await を追加
-    if (!isAuthenticated) {
-      setError("ログイン情報が正しくありません。"); // エラーメッセージをセット
-      return;
+    const result = await authenticateUser(username, password); // await を追加
+    if (result !== null) {
+      setIsLoggedIn(true);
+      setStudentId(result); // 認証が成功したらstudentIdをセット
+      setIsLoggedIn(true); // 認証成功時、isLoggedInをtrueに設定
+    } else {
+      setError("ログイン情報が正しくありません。");
+      setIsLoggedIn(false); // 認証失敗時、isLoggedInをfalseに設定
     }
-
-    setIsLoggedIn(true); // 認証成功時、isLoggedInをtrueに設定
   };
 
   return isLoggedIn ? (
-    <Dashboard />
+    <Dashboard studentId={studentId} /> // DashboardにstudentIdを渡す
   ) : (
     <Container>
       <Title>サンプルHp</Title>

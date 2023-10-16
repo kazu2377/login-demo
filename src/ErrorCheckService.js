@@ -44,7 +44,7 @@ export const authenticateUser = async (username, password) => {
       error
     );
 
-    return false;
+    return null;
   }
 
   // データが正確に1つ見つかった場合、認証は成功とみなします。
@@ -53,5 +53,5 @@ export const authenticateUser = async (username, password) => {
     error
   );
 
-  return true;
+  return data[0].student_id;
 };

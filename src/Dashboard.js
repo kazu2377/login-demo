@@ -20,7 +20,6 @@ const Dashboard = ({ studentId }) => {
 
   useEffect(() => {
     async function fetchAttendanceRecordsForStudent() {
-      const studentId = 1;
       const { data, error } = await supabase
         .from("students")
         .select(
