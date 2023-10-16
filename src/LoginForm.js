@@ -21,7 +21,8 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    // async を追加
     e.preventDefault();
 
     // 必須入力チェック
@@ -39,13 +40,13 @@ function LoginForm() {
     }
 
     // 認証エラーチェック（サンプル）
-    const authError = authenticateUser(username, password);
-    if (authError) {
-      setError(authError);
+    const isAuthenticated = await authenticateUser(username, password); // await を追加
+    if (!isAuthenticated) {
+      setError("ログイン情報が正しくありません。"); // エラーメッセージをセット
       return;
     }
 
-    setIsLoggedIn(true);
+    setIsLoggedIn(true); // 認証成功時、isLoggedInをtrueに設定
   };
 
   return isLoggedIn ? (
@@ -71,6 +72,7 @@ function LoginForm() {
         Copyright © sole color design Co., Ltd. All Rights Reserved.
       </FooterText>
 
+      {/* Usersコンポーネントをこの位置に残すかは、要件に応じて調整してください */}
       <Users />
     </Container>
   );
