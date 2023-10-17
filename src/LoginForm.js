@@ -54,8 +54,9 @@ function LoginForm() {
   };
 
   return isLoggedIn ? (
-    <Dashboard studentId={studentId} /> // DashboardにstudentIdを渡す
+    <Dashboard studentId={studentId} username={username} />
   ) : (
+    // Dashboardに渡す
     <Container>
       <Title>中野坂上校出席管理システム</Title>
       {error && <p style={{ color: "red" }}>{error}</p>}

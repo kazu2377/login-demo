@@ -7,7 +7,7 @@ import supabase from "./supabaseClient";
 import { ToastContainer, toast } from "react-toastify"; // 通知メッセージの表示のため
 import "react-toastify/dist/ReactToastify.css"; // 通知スタイル
 
-const Dashboard = ({ studentId }) => {
+const Dashboard = ({ studentId, username }) => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -161,7 +161,7 @@ const Dashboard = ({ studentId }) => {
     <div className="container mt-5">
       <ToastContainer />
       <h2 className="text-center mb-5">出席管理ダッシュボード</h2>
-      <h4 className="mb-4">学生ID: {studentId}</h4>
+      <h4 className="mb-4">学生ID: {username}</h4>
       <div className="mb-4">
         出席回数: {attendanceCounts.attendance}
         遅刻回数: {attendanceCounts.late}
