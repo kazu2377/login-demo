@@ -14,13 +14,20 @@ const Dashboard = ({ studentId }) => {
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [attendanceRecords, setAttendanceRecords] = useState([]);
 
-  const attendanceCounts = {
-    // 仮の出欠席データ
-    attendance: 10,
-    late: 2,
-    leaveEarly: 1,
+  // const attendanceCounts = {
+  //   // 仮の出欠席データ
+  //   attendance: 10,
+  //   late: 2,
+  //   leaveEarly: 1,
+  //   absence: 0,
+  // };
+
+  const [attendanceCounts, setAttendanceCounts] = useState({
+    attendance: 0,
+    late: 0,
+    leaveEarly: 0,
     absence: 0,
-  };
+  });
 
   const fetchAttendanceRecordsForStudent = useCallback(async () => {
     const { data, error } = await supabase
@@ -38,7 +45,40 @@ const Dashboard = ({ studentId }) => {
     if (error) {
       console.error("Error fetching attendance records:", error);
     } else if (data && data[0] && data[0].attendance_records) {
-      setAttendanceRecords(data[0].attendance_records);
+      // setAttendanceRecords(data[0].attendance_records);
+      const sortedRecords = sortRecordsByDateAndTime(
+        data[0].attendance_records
+      );
+      setAttendanceRecords(sortedRecords);
+      // Calculate the counts for each attendance status
+      const newCounts = {
+        attendance: 0,
+        late: 0,
+        leaveEarly: 0,
+        absence: 0,
+      };
+
+      data[0].attendance_records.forEach((record) => {
+        switch (record.status) {
+          case "出席":
+            newCounts.attendance += 1;
+            break;
+          case "遅刻":
+            newCounts.late += 1;
+            break;
+          case "早退":
+            newCounts.leaveEarly += 1;
+            break;
+          case "欠席":
+            newCounts.absence += 1;
+            break;
+          default:
+            // no default action
+            break;
+        }
+      });
+
+      setAttendanceCounts(newCounts); // Update the state with the new counts
     }
   }, [studentId]);
 
@@ -86,6 +126,43 @@ const Dashboard = ({ studentId }) => {
       console.error("Error adding record:", error);
       toast.error("データの追加に失敗しました。");
     }
+  }
+
+  function getStatusClass(status) {
+    switch (status) {
+      case "出席":
+        return "text-success";
+      case "遅刻":
+        return "text-warning";
+      case "早退":
+        return "text-info";
+      case "欠席":
+        return "text-danger";
+      default:
+        return "";
+    }
+  }
+
+  function sortRecordsByDateAndTime(records) {
+    return records.sort((a, b) => {
+      // 日付の比較
+      if (a.date > b.date) return -1;
+      if (a.date < b.date) return 1;
+
+      // 日付が同じ場合は時刻で比較
+      if (a.time && b.time) {
+        if (a.time > b.time) return -1;
+        if (a.time < b.time) return 1;
+      } else if (a.time) {
+        // a には時刻があり、b には時刻がない場合
+        return -1;
+      } else if (b.time) {
+        // b には時刻があり、a には時刻がない場合
+        return 1;
+      }
+
+      return 0;
+    });
   }
 
   return (
@@ -167,7 +244,7 @@ const Dashboard = ({ studentId }) => {
           {attendanceRecords.map((record, index) => (
             <tr key={index}>
               <td>{record.date}</td>
-              <td>{record.status}</td>
+              <td className={getStatusClass(record.status)}>{record.status}</td>
               <td>{record.time || "なし"}</td>
               <td>
                 <button
