@@ -57,7 +57,7 @@ function LoginForm() {
     <Dashboard studentId={studentId} /> // DashboardにstudentIdを渡す
   ) : (
     <Container>
-      <Title>サンプルHp</Title>
+      <Title>中野坂上校出席管理システム</Title>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <Input
         type="text"
@@ -77,7 +77,7 @@ function LoginForm() {
       </FooterText>
 
       {/* Usersコンポーネントをこの位置に残すかは、要件に応じて調整してください */}
-      <Users />
+      {/* <Users /> */}
     </Container>
   );
 }

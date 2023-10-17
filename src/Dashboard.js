@@ -14,14 +14,6 @@ const Dashboard = ({ studentId }) => {
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [attendanceRecords, setAttendanceRecords] = useState([]);
 
-  // const attendanceCounts = {
-  //   // 仮の出欠席データ
-  //   attendance: 10,
-  //   late: 2,
-  //   leaveEarly: 1,
-  //   absence: 0,
-  // };
-
   const [attendanceCounts, setAttendanceCounts] = useState({
     attendance: 0,
     late: 0,
