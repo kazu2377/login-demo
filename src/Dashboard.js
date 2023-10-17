@@ -4,7 +4,7 @@ import "./App.css";
 import supabase from "./supabaseClient";
 //... (他のimport文は変わらず)
 
-import { toast } from "react-toastify"; // 通知メッセージの表示のため
+import { ToastContainer, toast } from "react-toastify"; // 通知メッセージの表示のため
 import "react-toastify/dist/ReactToastify.css"; // 通知スタイル
 
 const Dashboard = ({ studentId }) => {
@@ -34,23 +34,6 @@ const Dashboard = ({ studentId }) => {
       .eq("student_id", studentId)
       .eq("generation_num", 0)
       .filter("attendance_records.generation_num", "eq", 0);
-
-    // const { data, error } = await supabase
-    //   .from("students")
-    //   .select(
-    //     `
-    //     student_id,
-    //     attendance_records:attendance_records (
-    //         record_id,
-    //         date,
-    //         status,
-    //         time
-    //     )
-    // `
-    //   )
-    //   .eq("student_id", studentId)
-    //   .eq("generation_num", 0)
-    //   .filter("attendance_records", "generation_num", "eq", 0); // この行を追加
 
     if (error) {
       console.error("Error fetching attendance records:", error);
@@ -90,6 +73,7 @@ const Dashboard = ({ studentId }) => {
 
   return (
     <div className="container mt-5">
+      <ToastContainer />
       <h2 className="text-center mb-5">出席管理ダッシュボード</h2>
       <h4 className="mb-4">学生ID: {studentId}</h4>
       <div className="mb-4">
