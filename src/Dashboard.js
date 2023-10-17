@@ -48,15 +48,6 @@ const Dashboard = ({ studentId }) => {
 
   async function deleteRecord(recordId) {
     try {
-      // const { error } = await supabase
-      //   .from("attendance_records")
-      //   .delete()
-      //   .eq("record_id", recordId);
-
-      // if (error) {
-      //   throw error;
-      // }
-
       await supabase
         .from("attendance_records")
         .update({ generation_num: 1 })
@@ -68,6 +59,32 @@ const Dashboard = ({ studentId }) => {
     } catch (error) {
       console.error("Error deleting record:", error);
       toast.error("データの削除に失敗しました。");
+    }
+  }
+
+  async function addAttendanceRecord(status, time = null) {
+    try {
+      const { data, error } = await supabase.from("attendance_records").insert([
+        {
+          student_id: studentId,
+          date: selectedDate,
+          status: status,
+          time: time,
+          generation_num: 0,
+          created_at: new Date().toISOString(), // 明示的に現在の日付と時刻を設定
+          updated_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("データを追加しました。");
+      fetchAttendanceRecordsForStudent();
+    } catch (error) {
+      console.error("Error adding record:", error);
+      toast.error("データの追加に失敗しました。");
     }
   }
 
@@ -83,11 +100,32 @@ const Dashboard = ({ studentId }) => {
         欠席回数: {attendanceCounts.absence}
       </div>
       <div className="mb-4 d-flex justify-content-around">
-        <button className="btn btn-success btn-lg">出席</button>
-        <button className="btn btn-warning btn-lg">遅刻</button>
-        <button className="btn btn-danger btn-lg">欠席</button>
-        <button className="btn btn-info btn-lg">早退</button>
+        <button
+          className="btn btn-success btn-lg"
+          onClick={() => addAttendanceRecord("出席")}
+        >
+          出席
+        </button>
+        <button
+          className="btn btn-warning btn-lg"
+          onClick={() => addAttendanceRecord("遅刻", selectedTime)}
+        >
+          遅刻
+        </button>
+        <button
+          className="btn btn-danger btn-lg"
+          onClick={() => addAttendanceRecord("欠席")}
+        >
+          欠席
+        </button>
+        <button
+          className="btn btn-info btn-lg"
+          onClick={() => addAttendanceRecord("早退", selectedTime)}
+        >
+          早退
+        </button>
       </div>
+
       <div className="mb-4">
         <label htmlFor="datePicker" className="form-label">
           日付:
