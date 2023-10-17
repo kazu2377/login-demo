@@ -48,10 +48,10 @@ export const authenticateUser = async (username, password) => {
   }
 
   // データが正確に1つ見つかった場合、認証は成功とみなします。
-  console.error(
-    "データが正確に1つ見つかった場合、認証は成功とみなします。:",
-    error
-  );
+  // console.error(
+  //   "データが正確に1つ見つかった場合、認証は成功とみなします。:",
+  //   error
+  // );
 
   return data[0].student_id;
 };

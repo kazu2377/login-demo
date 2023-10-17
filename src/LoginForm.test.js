@@ -6,16 +6,16 @@ import Dashboard from "./Dashboard";
 
 test("should fill out the login form and navigate", async () => {
   // mock history.push for navigation
-  const mockHistoryPush = jest.fn();
-  jest.mock("react-router-dom", () => ({
-    ...jest.requireActual("react-router-dom"),
-    useHistory: () => ({
-      push: mockHistoryPush,
-    }),
-  }));
+  // const mockHistoryPush = jest.fn();
+  // jest.mock("react-router-dom", () => ({
+  //   ...jest.requireActual("react-router-dom"),
+  //   useHistory: () => ({
+  //     push: mockHistoryPush,
+  //   }),
+  // }));
 
   render(<Login />);
-  render(<Dashboard />);
+  // render(<Dashboard />);
 
   // IDとパスワードの入力フィールドを取得
   // const idInput = screen.getByLabelText(/ID/i);
@@ -32,6 +32,9 @@ test("should fill out the login form and navigate", async () => {
   const loginButton = screen.getByText(/ログイン/i);
   userEvent.click(loginButton);
 
-  //次の画面に遷移したかどうかの確認
-  expect(screen.getByText("受講生の出欠席一覧")).toBeInTheDocument();
+  await waitFor(() => {
+    //次の画面に遷移したかどうかの確認
+
+    expect(screen.getByText("遅刻")).toBeInTheDocument();
+  });
 });
