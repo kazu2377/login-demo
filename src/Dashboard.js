@@ -219,9 +219,9 @@ const Dashboard = ({ studentId, username }) => {
           onChange={(e) => setSelectedTime(e.target.value)}
         />
       </div>
-      <div className="text-center">
+      {/* <div className="text-center">
         <button className="btn btn-primary">保存</button>
-      </div>
+      </div> */}
       <h4 className="mt-5 mb-3">受講生の出欠席一覧</h4>
       <table className="table">
         <thead>
