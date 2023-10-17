@@ -21,6 +21,37 @@ const Dashboard = ({ studentId, username }) => {
     absence: 0,
   });
 
+  const updateAttendanceCounts = (records) => {
+    const newCounts = {
+      attendance: 0,
+      late: 0,
+      leaveEarly: 0,
+      absence: 0,
+    };
+
+    records.forEach((record) => {
+      switch (record.status) {
+        case "出席":
+          newCounts.attendance += 1;
+          break;
+        case "遅刻":
+          newCounts.late += 1;
+          break;
+        case "早退":
+          newCounts.leaveEarly += 1;
+          break;
+        case "欠席":
+          newCounts.absence += 1;
+          break;
+        default:
+          // no default action
+          break;
+      }
+    });
+
+    setAttendanceCounts(newCounts);
+  };
+
   const fetchAttendanceRecordsForStudent = useCallback(async () => {
     const { data, error } = await supabase
       .from("students")
@@ -41,36 +72,10 @@ const Dashboard = ({ studentId, username }) => {
       const sortedRecords = sortRecordsByDateAndTime(
         data[0].attendance_records
       );
+
       setAttendanceRecords(sortedRecords);
       // Calculate the counts for each attendance status
-      const newCounts = {
-        attendance: 0,
-        late: 0,
-        leaveEarly: 0,
-        absence: 0,
-      };
-
-      data[0].attendance_records.forEach((record) => {
-        switch (record.status) {
-          case "出席":
-            newCounts.attendance += 1;
-            break;
-          case "遅刻":
-            newCounts.late += 1;
-            break;
-          case "早退":
-            newCounts.leaveEarly += 1;
-            break;
-          case "欠席":
-            newCounts.absence += 1;
-            break;
-          default:
-            // no default action
-            break;
-        }
-      });
-
-      setAttendanceCounts(newCounts); // Update the state with the new counts
+      updateAttendanceCounts(data[0].attendance_records);
     }
   }, [studentId]);
 
@@ -88,6 +93,11 @@ const Dashboard = ({ studentId, username }) => {
       toast.success("データを削除しました。");
 
       fetchAttendanceRecordsForStudent();
+
+      const updatedRecords = attendanceRecords.filter(
+        (record) => record.record_id !== recordId
+      );
+      updateAttendanceCounts(updatedRecords);
     } catch (error) {
       console.error("Error deleting record:", error);
       toast.error("データの削除に失敗しました。");
@@ -161,6 +171,7 @@ const Dashboard = ({ studentId, username }) => {
     attendanceCounts.late * 0.5 +
     attendanceCounts.leaveEarly * 0.5 +
     attendanceCounts.absence;
+  // 端数が0.5以上なら、1増やす
   const roundedTotalAbsence = Math.ceil(totalAbsence);
 
   return (
