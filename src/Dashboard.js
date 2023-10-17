@@ -157,17 +157,28 @@ const Dashboard = ({ studentId, username }) => {
     });
   }
 
+  const totalAbsence =
+    attendanceCounts.late * 0.5 +
+    attendanceCounts.leaveEarly * 0.5 +
+    attendanceCounts.absence;
+  const roundedTotalAbsence = Math.ceil(totalAbsence);
+
   return (
     <div className="container mt-5">
       <ToastContainer />
       <h2 className="text-center mb-5">出席管理ダッシュボード</h2>
       <h4 className="mb-4">学生ID: {username}</h4>
-      <div className="mb-4">
-        出席回数: {attendanceCounts.attendance}
-        遅刻回数: {attendanceCounts.late}
-        早退回数: {attendanceCounts.leaveEarly}
-        欠席回数: {attendanceCounts.absence}
+      <span className="mb-4 large-text">
+        総欠席回数(端数切り上げ): {roundedTotalAbsence}
+      </span>
+
+      <div className="mb-4 large-text">
+        <span>出席回数: {attendanceCounts.attendance}</span>
+        <span>遅刻回数: {attendanceCounts.late}</span>
+        <span>早退回数: {attendanceCounts.leaveEarly}</span>
+        <span>欠席回数: {attendanceCounts.absence}</span>
       </div>
+
       <div className="mb-4 d-flex justify-content-around">
         <button
           className="btn btn-success btn-lg"

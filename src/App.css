@@ -18,7 +18,12 @@ body {
 .App {
   text-align: center;
 }
-
+.large-text {
+  font-size: 20px; /* あるいは希望するフォントサイズに設定 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
