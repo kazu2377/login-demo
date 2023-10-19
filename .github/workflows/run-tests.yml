@@ -1,9 +1,9 @@
-name: Run Tests
+name: Run Tests and Deploy
 
 on: [push]
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -13,10 +13,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # 任意のバージョンを指定
+          node-version: "14"
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests
-        run: npm test App.test.js -- --watchAll=false
+        run: npm test -- --watchAll=false
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
