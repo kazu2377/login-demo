@@ -1,7 +1,17 @@
 import supabase from "../supabaseClient";
 export const checkRequiredFields = (fields) => {
+  if (!fields || fields.length === 0) return "必須入力です";
+
   for (let field of fields) {
-    if (field === "") return "必須入力です";
+    if (!field || field.length === 0) return "必須入力です";
+  }
+
+  return null;
+};
+
+export const checkStringLength = (str, maxLength) => {
+  if (str.length > maxLength) {
+    return `${maxLength}文字以内で入力してください`;
   }
   return null;
 };
@@ -11,16 +21,6 @@ export const checkEmailFormat = (email) => {
   if (!emailPattern.test(email)) return "無効なメールアドレス形式です";
   return null;
 };
-
-// export const authenticateUser = (username, password) => {
-//   // ここでAPIとの連携を行う予定。
-//   // サンプルとして、仮のユーザー名とパスワードを設定します。
-//   if (username !== "sample@example.com" || password !== "sample123") {
-//     // return "IDまたはパスワードが間違っています";
-//     return false;
-//   }
-//   return true;
-// };
 
 export const authenticateUser = async (username, password) => {
   // テーブルから、入力されたユーザー名（メールアドレス）とパスワードに一致するデータを検索する

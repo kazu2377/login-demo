@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Login from "./LoginForm";
+import Login from "../LoginForm";
 
 test("should fill out the login form and navigate", async () => {
   render(<Login />);

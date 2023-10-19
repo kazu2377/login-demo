@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import Dashboard from "./Dashboard";
+import Dashboard from "../Dashboard";
 
 import {
   checkRequiredFields,
   checkEmailFormat,
   authenticateUser,
-} from "./service/ErrorCheckService";
+} from "./serves/ErrorCheckService";
 import {
   Container,
   Title,
   Input,
   Button,
   FooterText,
-} from "./StyledComponents";
+} from "../StyledComponents";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -43,6 +43,7 @@ function LoginForm() {
     // 認証エラーチェック（サンプル）
     const result = await authenticateUser(username, password); // await を追加
     if (result !== null) {
+      setIsLoggedIn(true);
       setStudentId(result); // 認証が成功したらstudentIdをセット
       setIsLoggedIn(true); // 認証成功時、isLoggedInをtrueに設定
     } else {
@@ -74,6 +75,9 @@ function LoginForm() {
       <FooterText>
         Copyright © sole color design Co., Ltd. All Rights Reserved.
       </FooterText>
+
+      {/* Usersコンポーネントをこの位置に残すかは、要件に応じて調整してください */}
+      {/* <Users /> */}
     </Container>
   );
 }
