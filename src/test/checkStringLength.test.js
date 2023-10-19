@@ -6,7 +6,6 @@ import {
 } from "../service/ErrorCheckService"; // 実際のファイルのパスを指定してください。
 import { MAX_LOGIN_LENGTH, MAX_EMAIL_LENGTH } from "../util/constants";
 
-// ...
 describe("checkStringLength", () => {
   // 指定された最大長を超える文字列の場合のチェック
   it("should return error message for string exceeding the allowed length", () => {
