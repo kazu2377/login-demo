@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import Dashboard from "./Dashboard";
-import Users from "../Users";
 
 import {
   checkRequiredFields,
   checkEmailFormat,
   authenticateUser,
-} from "./serves/ErrorCheckService";
+} from "./service/ErrorCheckService";
 import {
   Container,
   Title,
   Input,
   Button,
   FooterText,
-} from "../StyledComponents";
+} from "./StyledComponents";
 
 function LoginForm() {
   const [username, setUsername] = useState("");

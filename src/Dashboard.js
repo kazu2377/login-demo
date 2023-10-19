@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import supabase from "../supabaseClient";
+import supabase from "./supabaseClient";
 //... (他のimport文は変わらず)
 
 import { ToastContainer, toast } from "react-toastify"; // 通知メッセージの表示のため
