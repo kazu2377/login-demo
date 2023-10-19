@@ -1,7 +1,10 @@
-const addNumbers = require("./calc");
+import { render, screen } from "@testing-library/react";
+import App from "../App";
 
-test("One plus two should be 3", () => {
-  expect(addNumbers(1, 2)).toBe(3);
+test("renders learn react link", () => {
+  render(<App />);
+  const linkElement = screen.getByText(/ログイン/i);
+  expect(linkElement).toBeInTheDocument();
 });
 
 // fetchData.test.js
