@@ -106,7 +106,7 @@ const Dashboard = ({ studentId, username }) => {
 
   async function addAttendanceRecord(status, time = null) {
     try {
-      const { data, error } = await supabase.from("attendance_records").insert([
+      const { error } = await supabase.from("attendance_records").insert([
         {
           student_id: studentId,
           date: selectedDate,
