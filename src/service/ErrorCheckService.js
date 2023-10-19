@@ -1,4 +1,4 @@
-import supabase from "./supabaseClient";
+import supabase from "../../supabaseClient";
 export const checkRequiredFields = (fields) => {
   for (let field of fields) {
     if (field === "") return "必須入力です";
