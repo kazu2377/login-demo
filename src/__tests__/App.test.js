@@ -12,7 +12,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import App_test from "../App_test";
+// import App_test from "../App_test";
 import Search from "../Search";
 
 describe("Search", () => {
