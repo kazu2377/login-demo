@@ -14,6 +14,8 @@ const Dashboard = ({ studentId, username }) => {
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [attendanceRecords, setAttendanceRecords] = useState([]);
 
+  const [studentData, setStudentData] = useState(null);
+
   const [attendanceCounts, setAttendanceCounts] = useState({
     attendance: 0,
     late: 0,
@@ -53,12 +55,25 @@ const Dashboard = ({ studentId, username }) => {
   };
 
   const fetchAttendanceRecordsForStudent = useCallback(async () => {
+    //   const { data, error } = await supabase
+    //     .from("students")
+    //     .select(
+    //       `
+    //   student_id,
+    //   attendance_records:attendance_records(record_id, date, status, time)
+    // `
+    //     )
+    //     .eq("student_id", studentId)
+    //     .eq("generation_num", 0)
+    //     .filter("attendance_records.generation_num", "eq", 0);
+
     const { data, error } = await supabase
       .from("students")
       .select(
         `
     student_id,
-    attendance_records:attendance_records(record_id, date, status, time)
+    attendance_records:attendance_records(record_id, date, status, time),
+    class:classes(class_name, class_time, max_absences, division)
   `
       )
       .eq("student_id", studentId)
@@ -69,6 +84,10 @@ const Dashboard = ({ studentId, username }) => {
       console.error("Error fetching attendance records:", error);
     } else if (data && data[0] && data[0].attendance_records) {
       // setAttendanceRecords(data[0].attendance_records);
+
+      //class名などを取得するため１レコードだけ取得してセットしている
+      setStudentData(data[0]);
+
       const sortedRecords = sortRecordsByDateAndTime(
         data[0].attendance_records
       );
@@ -179,6 +198,17 @@ const Dashboard = ({ studentId, username }) => {
       <ToastContainer />
       <h2 className="text-center mb-5">出席管理ダッシュボード</h2>
       <h4 className="mb-4">学生ID: {username}</h4>
+
+      {/* class名や授業時間などを表示する */}
+      {studentData && studentData.class && (
+        <>
+          <h5>クラス名: {studentData.class.class_name}</h5>
+          <p>授業時間: {studentData.class.class_time}</p>
+          <p>最大欠席日数: {studentData.class.max_absences}</p>
+          <p>区分: {studentData.class.division}</p>
+        </>
+      )}
+
       <span className="mb-4 large-text">
         総欠席回数(端数切り上げ): {roundedTotalAbsence}
       </span>
