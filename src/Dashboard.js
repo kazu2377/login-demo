@@ -55,18 +55,6 @@ const Dashboard = ({ studentId, username }) => {
   };
 
   const fetchAttendanceRecordsForStudent = useCallback(async () => {
-    //   const { data, error } = await supabase
-    //     .from("students")
-    //     .select(
-    //       `
-    //   student_id,
-    //   attendance_records:attendance_records(record_id, date, status, time)
-    // `
-    //     )
-    //     .eq("student_id", studentId)
-    //     .eq("generation_num", 0)
-    //     .filter("attendance_records.generation_num", "eq", 0);
-
     const { data, error } = await supabase
       .from("students")
       .select(
@@ -125,20 +113,42 @@ const Dashboard = ({ studentId, username }) => {
 
   async function addAttendanceRecord(status, time = null) {
     try {
-      const { error } = await supabase.from("attendance_records").insert([
-        {
-          student_id: studentId,
-          date: selectedDate,
-          status: status,
-          time: time,
-          generation_num: 0,
-          created_at: new Date().toISOString(), // 明示的に現在の日付と時刻を設定
-          updated_at: new Date().toISOString(),
-        },
-      ]);
+      // 1. 既存のレコードを検索する
+      const { data: existingRecords, error: fetchError } = await supabase
+        .from("attendance_records")
+        .select("*")
+        .eq("student_id", studentId)
+        .eq("date", selectedDate)
+        .eq("status", status)
+        .eq("generation_num", 0);
 
-      if (error) {
-        throw error;
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      // 2. その日の同じ状態のレコードが既に存在している場合
+      if (existingRecords && existingRecords.length > 0) {
+        toast.error(`その日の${status}のレコードは既に存在します。`);
+        return;
+      }
+
+      // 3. 新しいレコードを追加する
+      const { error: insertError } = await supabase
+        .from("attendance_records")
+        .insert([
+          {
+            student_id: studentId,
+            date: selectedDate,
+            status: status,
+            time: time,
+            generation_num: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        ]);
+
+      if (insertError) {
+        throw insertError;
       }
 
       toast.success("データを追加しました。");
@@ -192,14 +202,18 @@ const Dashboard = ({ studentId, username }) => {
     attendanceCounts.absence;
   // 端数が0.5以上なら、1増やす
   const roundedTotalAbsence = Math.ceil(totalAbsence);
+  const remainingAbsences =
+    studentData && studentData.class.max_absences - roundedTotalAbsence;
+  // 前提として studentData が null または undefined でないことを確認する
+  const isBelow20Percent =
+    studentData &&
+    studentData.class &&
+    remainingAbsences <= studentData.class.max_absences * 0.2;
 
   return (
     <div className="container mt-5">
       <ToastContainer />
-      <h2 className="text-center mb-5">出席管理ダッシュボード</h2>
-      <h4 className="mb-4">学生ID: {username}</h4>
 
-      {/* class名や授業時間などを表示する */}
       {studentData && studentData.class && (
         <>
           <h5>クラス名: {studentData.class.class_name}</h5>
@@ -211,6 +225,15 @@ const Dashboard = ({ studentId, username }) => {
 
       <span className="mb-4 large-text">
         総欠席回数(端数切り上げ): {roundedTotalAbsence}
+      </span>
+      <span className="mb-4 large-text">
+        総欠席回数(端数切り上げ前): {totalAbsence}
+      </span>
+
+      <span
+        className={`mb-4 large-text ${isBelow20Percent ? "text-danger" : ""}`}
+      >
+        残りの欠席回数: {remainingAbsences}
       </span>
 
       <div className="mb-4 large-text">
@@ -234,16 +257,16 @@ const Dashboard = ({ studentId, username }) => {
           遅刻
         </button>
         <button
-          className="btn btn-danger btn-lg"
-          onClick={() => addAttendanceRecord("欠席")}
-        >
-          欠席
-        </button>
-        <button
           className="btn btn-info btn-lg"
           onClick={() => addAttendanceRecord("早退", selectedTime)}
         >
           早退
+        </button>
+        <button
+          className="btn btn-danger btn-lg"
+          onClick={() => addAttendanceRecord("欠席")}
+        >
+          欠席
         </button>
       </div>
 
