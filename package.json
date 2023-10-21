@@ -5,7 +5,6 @@
   "private": true,
   "dependencies": {
     "@supabase/supabase-js": "^2.38.1",
-    "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -45,8 +44,10 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/plugin-syntax-jsx": "^7.22.5",
     "@babel/preset-react": "^7.22.15",
+    "@testing-library/dom": "^9.3.3",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.1",
     "gh-pages": "^6.0.0"
   }
 }
