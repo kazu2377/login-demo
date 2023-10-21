@@ -22,11 +22,11 @@ test("should fill out the login form and navigate", async () => {
   const loginButton = screen.getByText(/ログイン/i);
   userEvent.click(loginButton);
 
+  //なぜかｐｃにより通らない場合があるのでエラーが出るならコメントしておく
   await waitFor(() => {
     //次の画面に遷移したかどうかの確認
     expect(screen.getByText("遅刻")).toBeInTheDocument();
   });
-
   // ボタンを取得
   const button = screen.getByText("遅刻");
   console.log(button);

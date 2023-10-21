@@ -3,9 +3,9 @@ import LoginForm from "./LoginForm";
 import App_test from "./App_test";
 
 function App() {
-  return <App_test />;
+  // return <App_test />;
 
-  // return <LoginForm />;
+  return <LoginForm />;
 }
 
 export default App;
