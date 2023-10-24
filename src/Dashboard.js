@@ -216,7 +216,9 @@ const Dashboard = ({ studentId, username }) => {
 
       {studentData && studentData.class && (
         <>
-          <h5>クラス名: {studentData.class.class_name}</h5>
+          <h5>
+            {username}クラス名: {studentData.class.class_name}
+          </h5>
           <p>授業時間: {studentData.class.class_time}</p>
           <p>最大欠席日数: {studentData.class.max_absences}</p>
           <p>区分: {studentData.class.division}</p>
